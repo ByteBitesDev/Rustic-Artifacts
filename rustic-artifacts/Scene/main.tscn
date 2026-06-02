@@ -2,37 +2,79 @@
 
 [ext_resource type="Texture2D" uid="uid://6rji64kqri40" path="res://icon.svg" id="1_f6udf"]
 [ext_resource type="Script" uid="uid://bwrkq45xe86kb" path="res://Scene/player.gd" id="1_sblpm"]
+[ext_resource type="Texture2D" uid="uid://cntmvslt2kube" path="res://player.png" id="2_2wwxx"]
+[ext_resource type="Texture2D" uid="uid://bxffdfuy4ly6k" path="res://Spritesheet.png" id="2_r34rm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xcnr"]
+atlas = ExtResource("2_2wwxx")
+region = Rect2(0, 256, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2wwxx"]
+atlas = ExtResource("2_r34rm")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3amdw"]
+atlas = ExtResource("2_r34rm")
+region = Rect2(256, 0, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1xcnr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xcnr")
+}],
+"loop": false,
+"name": &"Attack",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2wwxx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3amdw")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r34rm"]
-size = Vector2(125, 128)
+size = Vector2(33, 150)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2wwxx"]
 size = Vector2(1230.5, 20)
 
 [node name="Main" type="Node2D" unique_id=215612311]
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=1873406222]
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1873406222 node_paths=PackedStringArray("player_sprite")]
 script = ExtResource("1_sblpm")
 speed = 750.0
 jump_velocity = -1000.0
+player_sprite = NodePath("playersprite")
 
-[node name="temp" type="Sprite2D" parent="CharacterBody2D" unique_id=1652242999]
-texture = ExtResource("1_f6udf")
+[node name="playersprite" type="AnimatedSprite2D" parent="Player" unique_id=144354763]
+sprite_frames = SubResource("SpriteFrames_1xcnr")
+animation = &"Idle"
+autoplay = "Idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1761451483]
-position = Vector2(1.5, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1761451483]
+position = Vector2(-7.5, -5)
 shape = SubResource("RectangleShape2D_r34rm")
+debug_color = Color(1.732707e-06, 0.6439921, 0.29549855, 0.41960785)
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D" unique_id=2136849493]
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=2136849493]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1961238289]
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1961238289]
 
-[node name="Icon" type="Sprite2D" parent="StaticBody2D" unique_id=560537581]
+[node name="Icon" type="Sprite2D" parent="Ground" unique_id=560537581]
 position = Vector2(575, 642)
 scale = Vector2(9.718751, 1)
 texture = ExtResource("1_f6udf")
 region_rect = Rect2(16.800018, 12.799995, 96, 97.6)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=950899879]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=950899879]
 position = Vector2(579.75, 593)
 shape = SubResource("RectangleShape2D_2wwxx")
+
+[connection signal="animation_finished" from="Player/playersprite" to="Player" method="Animation_finished"]
